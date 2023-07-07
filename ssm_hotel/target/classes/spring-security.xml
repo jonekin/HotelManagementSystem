@@ -1,0 +1,60 @@
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+<!--<beans xmlns="http://www.springframework.org/schema/beans"-->
+<!--       xmlns:security="http://www.springframework.org/schema/security"-->
+<!--       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
+<!--       xsi:schemaLocation="http://www.springframework.org/schema/beans-->
+<!--http://www.springframework.org/schema/beans/spring-beans.xsd-->
+<!--http://www.springframework.org/schema/security-->
+<!--http://www.springframework.org/schema/security/spring-security.xsd">-->
+
+<!--    &lt;!&ndash; 设置静态资源匿名访问 &ndash;&gt;-->
+<!--    <security:http pattern="/statics/**" security="none"/>-->
+<!--    &lt;!&ndash; 执行失败后跳转的地址 &ndash;&gt;-->
+<!--    <security:http pattern="/failure.jsp" security="none"/>-->
+<!--    <security:http pattern="/403.jsp" security="none"/>-->
+<!--    &lt;!&ndash; web项目icon图标 &ndash;&gt;-->
+<!--    <security:http pattern="/favicon.ico" security="none"/>-->
+
+<!--    <security:http auto-config="true" use-expressions="true">-->
+<!--        &lt;!&ndash; 让登录页面可以匿名访问（无需进行拦截操作） &ndash;&gt;-->
+<!--        <security:intercept-url pattern="/login.jsp" access="permitAll()"/>-->
+<!--        &lt;!&ndash; 定义过滤规则 &ndash;&gt;-->
+<!--        <security:intercept-url pattern="/**" access="hasAnyRole('ROLE_USER')"/>-->
+<!--        &lt;!&ndash; 配置自定义登录认证页面 &ndash;&gt;-->
+<!--        <security:form-login-->
+<!--                login-page="/login.jsp"-->
+<!--                login-processing-url="/login"-->
+<!--                default-target-url="/index.jsp"-->
+<!--                authentication-failure-url="/failure.jsp"-->
+<!--                username-parameter="username"-->
+<!--                password-parameter="password"-->
+<!--        />-->
+
+<!--        &lt;!&ndash; 防止点击劫持攻击 &ndash;&gt;-->
+<!--        &lt;!&ndash; 启用后，将X-Frame-Options标头添加到响应中，这使较新的浏览器可以进行一些安全检查并防止点击劫持攻击 &ndash;&gt;-->
+<!--        <security:headers>-->
+<!--            <security:frame-options policy="SAMEORIGIN"/>-->
+<!--        </security:headers>-->
+
+<!--        &lt;!&ndash; 记住我功能 &ndash;&gt;-->
+<!--         <security:remember-me data-source-ref="dataSource"-->
+<!--                               token-validity-seconds="1200"-->
+<!--                               remember-me-parameter="remember-me"-->
+<!--                               user-service-ref="sysUserServiceImpl"-->
+<!--         />-->
+
+<!--        &lt;!&ndash;403异常处理&ndash;&gt;-->
+<!--        <security:access-denied-handler error-page="/403.jsp"/>-->
+<!--    </security:http>-->
+
+<!--    &lt;!&ndash; 注入密码加密类 &ndash;&gt;-->
+<!--    <bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>-->
+
+<!--    <security:authentication-manager>-->
+<!--        <security:authentication-provider user-service-ref="sysUserServiceImpl">-->
+<!--            &lt;!&ndash; 注入密码加密类 &ndash;&gt;-->
+<!--            <security:password-encoder ref="passwordEncoder"/>-->
+<!--        </security:authentication-provider>-->
+<!--    </security:authentication-manager>-->
+
+<!--</beans>-->

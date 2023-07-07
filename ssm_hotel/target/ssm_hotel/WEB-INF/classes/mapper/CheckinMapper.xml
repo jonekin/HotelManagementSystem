@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.hotel.dao.CheckinMapper">
+
+    <resultMap id="BaseResultMap" type="com.ssm.hotel.entity.Checkin">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <id column="payPrice" jdbcType="DECIMAL" property="payprice" />
+        <result column="roomTypeId" jdbcType="INTEGER" property="roomtypeid" />
+        <result column="roomId" jdbcType="BIGINT" property="roomid" />
+        <result column="customerName" jdbcType="VARCHAR" property="customername" />
+        <result column="idCard" jdbcType="VARCHAR" property="idcard" />
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="arriveDate" jdbcType="DATE" property="arrivedate" />
+        <result column="leaveDate" jdbcType="DATE" property="leavedate" />
+        <result column="ordersId" jdbcType="BIGINT" property="ordersid" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="createDate" jdbcType="TIMESTAMP" property="createdate" />
+        <result column="createdBy" jdbcType="INTEGER" property="createdby" />
+        <result column="modifyDate" jdbcType="TIMESTAMP" property="modifydate" />
+        <result column="modifyBy" jdbcType="INTEGER" property="modifyby" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+    </resultMap>
+
+    <resultMap id="checkinRoomResultMap" type="com.ssm.hotel.entity.Checkin" extends="BaseResultMap">
+        <!-- 房型 -->
+        <association property="roomType" javaType="com.ssm.hotel.entity.RoomType">
+            <id column="id" jdbcType="INTEGER" property="id" />
+            <result column="typeName" jdbcType="VARCHAR" property="typename" />
+<!--            <result column="photo" jdbcType="VARCHAR" property="photo" />-->
+<!--            <result column="price" jdbcType="DECIMAL" property="price" />-->
+        </association>
+        <!-- 房间 -->
+        <association property="room" javaType="com.ssm.hotel.entity.Room">
+            <id column="id" jdbcType="INTEGER" property="id" />
+<!--            <result column="photo" jdbcType="VARCHAR" property="photo" />-->
+            <result column="roomNum" jdbcType="VARCHAR" property="roomnum" />
+        </association>
+    </resultMap>
+    <insert id="addCheckin">
+        insert into t_checkin(roomtypeid,roomid,customername,idcard,phone,arrivedate,leavedate,payprice,status,remark,ordersid)
+        values(#{roomtypeid},#{roomid},#{customername},#{idcard},#{phone},#{arrivedate},#{leavedate},#{payprice},#{status},#{remark},#{ordersid})
+    </insert>
+    <update id="updateCheckin">
+        update t_checkin
+        <set>
+            <if test="roomtypeid != null">
+                roomTypeId = #{roomtypeid,jdbcType=INTEGER},
+            </if>
+            <if test="roomid != null">
+                roomId = #{roomid,jdbcType=BIGINT},
+            </if>
+            <if test="customername != null">
+                customerName = #{customername,jdbcType=VARCHAR},
+            </if>
+            <if test="idcard != null">
+                idCard = #{idcard,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="arrivedate != null">
+                arriveDate = #{arrivedate,jdbcType=DATE},
+            </if>
+            <if test="leavedate != null">
+                leaveDate = #{leavedate,jdbcType=DATE},
+            </if>
+            <if test="ordersid != null">
+                ordersId = #{ordersid,jdbcType=BIGINT},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="createdate != null">
+                createDate = #{createdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdby != null">
+                createdBy = #{createdby,jdbcType=INTEGER},
+            </if>
+            <if test="modifydate != null">
+                modifyDate = #{modifydate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyby != null">
+                modifyBy = #{modifyby,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="findCheckinList" resultMap="checkinRoomResultMap">
+        select t1.*,t2.`typeName`,t3.`roomNum` from t_checkin t1
+        inner join t_room_type t2 on t2.id = t1.`roomTypeId`
+        inner join t_room t3 on t3.id = t1.`roomId`
+        <where>
+            <if test="customername!=null and customername!=''">
+                and t1.customerName like concat('%',#{customername},'%')
+            </if>
+            <if test="idcard!=null and idcard!=''">
+                and t1.idCard like concat('%',#{idcard},'%')
+            </if>
+            <if test="phone!=null and phone!=''">
+                and t1.phone like concat('%',#{phone},'%')
+            </if>
+            <if test="roomtypeid!=null">
+                and t1.roomTypeId = #{roomtypeid}
+            </if>
+            <if test="status!=null">
+                and t1.status = #{status}
+            </if>
+            <if test="arrivedate!=null">
+                <![CDATA[ and t1.arrivedate >= #{arrivedate} ]]>
+            </if>
+            <if test="leavedate!=null">
+                <![CDATA[ and t1.leavedate <= #{leavedate} ]]>
+            </if>
+        </where>
+    </select>
+    <select id="findById" resultType="com.ssm.hotel.entity.Checkin">
+        select * from t_checkin where id = #{id}
+    </select>
+</mapper>
